@@ -37,17 +37,32 @@ local function get_line_anchors()
     return Line
 end
 
-function M.setup(opts)
-  opts = opts or {}
-
-  vim.keymap.set({"n", "v"}, "<Leader>h", function()
+local function create_github_url()
     Repo_url = get_repo_url()
     Revision = get_revision()
     Line_anchors = get_line_anchors()
     Path = get_path()
-    local url = "GitHubURL: " .. Repo_url .. "/blob/" .. Revision .. "/" .. Path .. Line_anchors
-    vim.print(url)
+    return Repo_url .. "/blob/" .. Revision .. "/" .. Path .. Line_anchors
+end
 
+local function open_browser(url)
+	if url ~= '' then
+	  vim.uv.spawn("open", {args = {url}})
+	end
+end
+
+function M.setup(opts)
+  opts = opts or {}
+
+  vim.keymap.set({"n", "v"}, "<Leader>u", function()
+    local url = create_github_url()
+    vim.print("GitHubURL: " ..url)
+    vim.fn.setreg('+', url)
+   end)
+
+  vim.keymap.set({"n", "v"}, "<Leader>b", function()
+    local url = create_github_url()
+    open_browser(url)
    end)
 end
 
