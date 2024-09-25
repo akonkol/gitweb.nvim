@@ -12,7 +12,7 @@ local function get_repo_url()
   end
 
   Git_repo_results =  vim.fn.systemlist("git config --get remote." .. Remote .. ".url")[1]
-  return Git_repo_results:gsub("%:","/"):gsub("git%@","https%://"):gsub("%.git", "")
+  return Git_repo_results:gsub("%:","/"):gsub("git%@","https%:%/%/"):gsub("%.git", "")
 end
 
 local function get_revision()
