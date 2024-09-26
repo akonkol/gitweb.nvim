@@ -12,7 +12,14 @@ local function get_repo_url()
   end
 
   Git_repo_results =  vim.fn.systemlist("git config --get remote." .. Remote .. ".url")[1]
-  return Git_repo_results:gsub("%:","/"):gsub("git%@","https%:%/%/"):gsub("%.git", "")
+  Repo_url = Git_repo_results:gsub("%.git","")
+
+  if Repo_url:find("^https") ~= nil then
+    return Repo_url
+  else
+    return Repo_url:gsub("%:","/"):gsub("git%@","https%:%/%/")
+  end
+
 end
 
 local function get_revision()
@@ -56,7 +63,7 @@ function M.setup(opts)
 
   vim.keymap.set({"n", "v"}, "<Leader>u", function()
     local url = create_github_url()
-    vim.print("GitHubURL: " ..url)
+    vim.print("GitHubURL: " .. url)
     vim.fn.setreg('+', url)
    end)
 
